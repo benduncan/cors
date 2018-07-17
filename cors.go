@@ -67,8 +67,9 @@ func (c Config) Validate() error {
 		return errors.New("conflict settings: all origins disabled")
 	}
 	for _, origin := range c.AllowOrigins {
-		if origin != "*" && !strings.HasPrefix(origin, "http://") && !strings.HasPrefix(origin, "https://") {
-			return errors.New("bad origin: origins must either be '*' or include http:// or https://")
+		// Allow file:// origins, when using ReactJS + Cordova to load assets locally vs a web-server
+		if origin != "*" && !strings.HasPrefix(origin, "http://") && !strings.HasPrefix(origin, "https://") && !strings.HasPrefix(origin, "file://") {
+			return errors.New("bad origin: origins must either be '*' or include http:// https:// or file://")
 		}
 	}
 	return nil
